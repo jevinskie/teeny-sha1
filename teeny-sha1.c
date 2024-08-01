@@ -29,6 +29,8 @@ extern void dump_sha1_block(const char *const _Nonnull name, const size_t i,
 extern int sha1digest(uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databytes);
 
 static const char impl_name[] = "sha1-teeny";
+static size_t block_cnt;
+static size_t state_cnt;
 
 /*******************************************************************************
  * sha1digest: https://github.com/CTrabant/teeny-sha1
@@ -141,7 +143,7 @@ sha1digest(uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databyt
     }
 
     /* Main loop */
-    dump_sha1_state(impl_name, lidx, (const uint8_t *)H);
+    dump_sha1_state(impl_name, state_cnt++, (const uint8_t *)H);
     a = H[0];
     b = H[1];
     c = H[2];
