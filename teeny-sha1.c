@@ -20,9 +20,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* Declaration:
+extern void dump_sha1_state(const char *const _Nonnull name, const size_t i,
+                                const uint8_t *const _Nonnull state);
+extern void dump_sha1_block(const char *const _Nonnull name, const size_t i,
+                                const uint8_t *const _Nonnull block);
+
+/* Declaration: */
 extern int sha1digest(uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databytes);
-*/
+
+static const char impl_name[] = "sha1-teeny";
 
 /*******************************************************************************
  * sha1digest: https://github.com/CTrabant/teeny-sha1
@@ -66,15 +72,15 @@ sha1digest(uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databyt
   uint32_t k = 0;
 
   uint32_t idx;
-  uint32_t lidx;
+  size_t lidx;
   uint32_t widx;
   uint32_t didx = 0;
 
   int32_t wcount;
   uint32_t temp;
   uint64_t databits = ((uint64_t)databytes) * 8;
-  uint32_t loopcount = (databytes + 8) / 64 + 1;
-  uint32_t tailbytes = 64 * loopcount - databytes;
+  size_t loopcount = (databytes + 8) / 64 + 1;
+  size_t tailbytes = 64 * loopcount - databytes;
   uint8_t datatail[128] = {0};
 
   if (!digest && !hexdigest)
@@ -135,6 +141,7 @@ sha1digest(uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databyt
     }
 
     /* Main loop */
+    dump_sha1_state(impl_name, lidx, (const uint8_t *)H);
     a = H[0];
     b = H[1];
     c = H[2];
