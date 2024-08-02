@@ -183,6 +183,8 @@ sha1digest (uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databy
       a = temp;
     }
 
+    dump_sha1_block (impl_name, block_cnt++, (const uint8_t *)&W[64]);
+
     H[0] += a;
     H[1] += b;
     H[2] += c;
