@@ -54,6 +54,9 @@ static size_t state_cnt;
  *
  * @return: 0 on success and non-zero on error.
  ******************************************************************************/
+#if defined(__clang__)
+__attribute__ ((no_sanitize ("unsigned-integer-overflow"), no_sanitize ("unsigned-shift-base")))
+#endif
 int
 sha1digest(uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databytes)
 {
