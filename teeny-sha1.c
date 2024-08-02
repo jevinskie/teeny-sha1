@@ -15,18 +15,18 @@
  * the declaration (example below) in the sources files where needed.
  ******************************************************************************/
 
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-extern void dump_sha1_state(const char *const _Nonnull name, const size_t i,
-                                const uint8_t *const _Nonnull state);
-extern void dump_sha1_block(const char *const _Nonnull name, const size_t i,
-                                const uint8_t *const _Nonnull block);
+extern void dump_sha1_state (const char *const _Nonnull name, const size_t i,
+                             const uint8_t *const _Nonnull state);
+extern void dump_sha1_block (const char *const _Nonnull name, const size_t i,
+                             const uint8_t *const _Nonnull block);
 
 /* Declaration: */
-extern int sha1digest(uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databytes);
+extern int sha1digest (uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databytes);
 
 static const char impl_name[] = "sha1-teeny";
 static size_t block_cnt;
@@ -49,7 +49,7 @@ static size_t state_cnt;
  *    digest    -- the result, MUST be at least 20 bytes
  *    hexdigest -- the result in hex, MUST be at least 41 bytes
  *
- * At least one of the output buffers must be supplied.  The other, if not 
+ * At least one of the output buffers must be supplied.  The other, if not
  * desired, may be set to NULL.
  *
  * @return: 0 on success and non-zero on error.
@@ -58,7 +58,7 @@ static size_t state_cnt;
 __attribute__ ((no_sanitize ("unsigned-integer-overflow"), no_sanitize ("unsigned-shift-base")))
 #endif
 int
-sha1digest(uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databytes)
+sha1digest (uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databytes)
 {
 #define SHA1ROTATELEFT(value, bits) (((value) << (bits)) | ((value) >> (32 - (bits))))
 
@@ -98,14 +98,14 @@ sha1digest(uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databyt
      Add bit '1' to end of message (big-endian)
      Add 64-bit message length in bits at very end (big-endian) */
   datatail[0] = 0x80;
-  datatail[tailbytes - 8] = (uint8_t) (databits >> 56 & 0xFF);
-  datatail[tailbytes - 7] = (uint8_t) (databits >> 48 & 0xFF);
-  datatail[tailbytes - 6] = (uint8_t) (databits >> 40 & 0xFF);
-  datatail[tailbytes - 5] = (uint8_t) (databits >> 32 & 0xFF);
-  datatail[tailbytes - 4] = (uint8_t) (databits >> 24 & 0xFF);
-  datatail[tailbytes - 3] = (uint8_t) (databits >> 16 & 0xFF);
-  datatail[tailbytes - 2] = (uint8_t) (databits >> 8 & 0xFF);
-  datatail[tailbytes - 1] = (uint8_t) (databits >> 0 & 0xFF);
+  datatail[tailbytes - 8] = (uint8_t)(databits >> 56 & 0xFF);
+  datatail[tailbytes - 7] = (uint8_t)(databits >> 48 & 0xFF);
+  datatail[tailbytes - 6] = (uint8_t)(databits >> 40 & 0xFF);
+  datatail[tailbytes - 5] = (uint8_t)(databits >> 32 & 0xFF);
+  datatail[tailbytes - 4] = (uint8_t)(databits >> 24 & 0xFF);
+  datatail[tailbytes - 3] = (uint8_t)(databits >> 16 & 0xFF);
+  datatail[tailbytes - 2] = (uint8_t)(databits >> 8 & 0xFF);
+  datatail[tailbytes - 1] = (uint8_t)(databits >> 0 & 0xFF);
 
   /* Process each 512-bit chunk */
   for (lidx = 0; lidx < loopcount; lidx++)
@@ -146,7 +146,7 @@ sha1digest(uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databyt
     }
 
     /* Main loop */
-    dump_sha1_state(impl_name, state_cnt++, (const uint8_t *)H);
+    dump_sha1_state (impl_name, state_cnt++, (const uint8_t *)H);
     a = H[0];
     b = H[1];
     c = H[2];
@@ -195,10 +195,10 @@ sha1digest(uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databyt
   {
     for (idx = 0; idx < 5; idx++)
     {
-      digest[idx * 4 + 0] = (uint8_t) (H[idx] >> 24);
-      digest[idx * 4 + 1] = (uint8_t) (H[idx] >> 16);
-      digest[idx * 4 + 2] = (uint8_t) (H[idx] >> 8);
-      digest[idx * 4 + 3] = (uint8_t) (H[idx]);
+      digest[idx * 4 + 0] = (uint8_t)(H[idx] >> 24);
+      digest[idx * 4 + 1] = (uint8_t)(H[idx] >> 16);
+      digest[idx * 4 + 2] = (uint8_t)(H[idx] >> 8);
+      digest[idx * 4 + 3] = (uint8_t)(H[idx]);
     }
   }
 
@@ -206,8 +206,8 @@ sha1digest(uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databyt
   if (hexdigest)
   {
     snprintf (hexdigest, 41, "%08x%08x%08x%08x%08x",
-              H[0],H[1],H[2],H[3],H[4]);
+              H[0], H[1], H[2], H[3], H[4]);
   }
 
   return 0;
-}  /* End of sha1digest() */
+} /* End of sha1digest() */

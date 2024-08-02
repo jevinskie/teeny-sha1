@@ -20,15 +20,15 @@
  *   cc -g -O2 -Wall teeny-sha1.c teeny-sha1-test.c -o teeny-sha1-test
  ******************************************************************************/
 
-#include <stdio.h>
+#include <errno.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-#include <errno.h>
 
 /* Declare sha1digest and use directly from teeny-sha1.c */
-extern int sha1digest(uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databytes);
+extern int sha1digest (uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databytes);
 
 /* Generate hexadecimal version of a 20-byte digest value */
 void
@@ -126,19 +126,19 @@ main (int argc, char **argv)
   /* Test vectors from http://www.di-mgt.com.au/sha_testvectors.html */
   data = "abc";
   knowndigest = "a9993e364706816aba3e25717850c26c9cd0d89d";
-  failurecount += testhash (data, strlen(data), knowndigest);
+  failurecount += testhash (data, strlen (data), knowndigest);
 
   data = "";
   knowndigest = "da39a3ee5e6b4b0d3255bfef95601890afd80709";
-  failurecount += testhash (data, strlen(data), knowndigest);
+  failurecount += testhash (data, strlen (data), knowndigest);
 
   data = "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq";
   knowndigest = "84983e441c3bd26ebaae4aa1f95129e5e54670f1";
-  failurecount += testhash (data, strlen(data), knowndigest);
+  failurecount += testhash (data, strlen (data), knowndigest);
 
   data = "abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu";
   knowndigest = "a49b2446a02c645bf419f995b67091253a04a259";
-  failurecount += testhash (data, strlen(data), knowndigest);
+  failurecount += testhash (data, strlen (data), knowndigest);
 
   /* One million repetitions of 'a' */
   data = (char *)malloc (1000000);
@@ -151,8 +151,8 @@ main (int argc, char **argv)
   if (largetest)
   {
     char *base = "abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmno";
-    size_t baselen = strlen(base);
-    data = (char *) malloc (16777216 * baselen);
+    size_t baselen = strlen (base);
+    data = (char *)malloc (16777216 * baselen);
     for (idx = 0; idx < 16777216; idx++)
     {
       memcpy (data + (idx * baselen), base, baselen);
@@ -160,17 +160,17 @@ main (int argc, char **argv)
 
     knowndigest = "7789f0c9ef7bfc40d93311143dfbe69e2017f592";
     failurecount += testhash (data, baselen * 16777216, knowndigest);
-    free(data);
+    free (data);
   }
 
   /* Example hashes from Wikipedia */
   data = "The quick brown fox jumps over the lazy dog";
   knowndigest = "2fd4e1c67a2d28fced849ee1bb76e7391b93eb12";
-  failurecount += testhash (data, strlen(data), knowndigest);
+  failurecount += testhash (data, strlen (data), knowndigest);
 
   data = "The quick brown fox jumps over the lazy cog";
   knowndigest = "de9f2c7fd25e1b3afad3e85a0bd17d9b100db4b3";
-  failurecount += testhash (data, strlen(data), knowndigest);
+  failurecount += testhash (data, strlen (data), knowndigest);
 
   /* Read test vectors from the NIST NSRL Sample Vectors subset:
      http://www.nsrl.nist.gov/testdata/
@@ -186,19 +186,19 @@ main (int argc, char **argv)
     int idx;
 
     /* Open byte-hashes.sha1 and store known hash values (in hex) */
-    snprintf (path, sizeof(path), "%s/byte-hashes.sha1", nsrldir);
-    if (!(infile = fopen(path, "r")))
+    snprintf (path, sizeof (path), "%s/byte-hashes.sha1", nsrldir);
+    if (!(infile = fopen (path, "r")))
     {
-      printf ("Error opening %s: %s\n", path, strerror(errno));
+      printf ("Error opening %s: %s\n", path, strerror (errno));
       return 1;
     }
-    while (fgets(line, sizeof(line), infile))
+    while (fgets (line, sizeof (line), infile))
     {
       /* Store known hash values, e.g. "DA39A3EE5E6B4B0D3255BFEF95601890AFD80709 ^" */
-      if (strlen(line) >= 42 && line[40] == ' ' && line[41] == '^')
+      if (strlen (line) >= 42 && line[40] == ' ' && line[41] == '^')
       {
         line[40] = '\0';
-        nsrlhashes[hashcount] = strdup(line);
+        nsrlhashes[hashcount] = strdup (line);
         hashcount++;
       }
     }
@@ -209,20 +209,20 @@ main (int argc, char **argv)
     /* Open byte####.dat file that match the order of the hashes */
     for (idx = 0; idx < hashcount; idx++)
     {
-      snprintf (path, sizeof(path), "%s/byte%04d.dat", nsrldir, idx);
-      if (!(infile = fopen(path, "r")))
+      snprintf (path, sizeof (path), "%s/byte%04d.dat", nsrldir, idx);
+      if (!(infile = fopen (path, "r")))
       {
-        printf ("Error opening %s: %s\n", path, strerror(errno));
+        printf ("Error opening %s: %s\n", path, strerror (errno));
         return 1;
       }
 
       /* Read file contents into buffer */
-      fstat (fileno(infile), &sb);
-      data = (char *) malloc ((size_t)sb.st_size);
+      fstat (fileno (infile), &sb);
+      data = (char *)malloc ((size_t)sb.st_size);
       if (sb.st_size > 0 && fread (data, (size_t)sb.st_size, 1, infile) != 1)
       {
-        if (ferror(infile))
-          printf ("Error reading %s: %s\n", path, strerror(errno));
+        if (ferror (infile))
+          printf ("Error reading %s: %s\n", path, strerror (errno));
         else
           printf ("Short read of %s, expected %zu bytes\n", path, (size_t)sb.st_size);
 
@@ -236,7 +236,6 @@ main (int argc, char **argv)
       free (data);
     }
   } /* Done with NSRL test vectors */
-
 
   printf ("Failures: %d\n", failurecount);
 
