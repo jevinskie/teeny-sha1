@@ -25,12 +25,12 @@ extern void dump_sha1_state (const char *const _Nonnull name, const size_t i,
 extern void dump_sha1_block (const char *const _Nonnull name, const size_t i,
                              const uint8_t *const _Nonnull block);
 
-/* Declaration: */
-extern int sha1digest (uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databytes);
-
 static const char impl_name[] = "sha1-teeny";
 static size_t block_cnt;
 static size_t state_cnt;
+
+/* Declaration: */
+extern int sha1digest (uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databytes);
 
 /*******************************************************************************
  * sha1digest: https://github.com/CTrabant/teeny-sha1
