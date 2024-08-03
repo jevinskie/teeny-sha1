@@ -20,10 +20,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-extern void dump_sha1_state (const char *const _Nonnull name, const size_t i,
-                             const uint8_t *const _Nonnull state);
-extern void dump_sha1_block (const char *const _Nonnull name, const size_t i,
-                             const uint8_t *const _Nonnull block);
+extern void dump_sha1_state (const char *const _Nonnull name, const int line, const size_t i, const uint8_t *const _Nonnull state);
+extern void dump_sha1_block (const char *const _Nonnull name, const int line, size_t i, const uint8_t *const _Nonnull block);
 
 static const char impl_name[] = "sha1-teeny";
 static size_t block_cnt;
@@ -146,7 +144,7 @@ sha1digest (uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databy
     }
 
     /* Main loop */
-    dump_sha1_state (impl_name, state_cnt++, (const uint8_t *)H);
+    dump_sha1_state (impl_name, __LINE__, state_cnt++, (const uint8_t *)H);
     a = H[0];
     b = H[1];
     c = H[2];
@@ -183,7 +181,7 @@ sha1digest (uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databy
       a = temp;
     }
 
-    dump_sha1_block (impl_name, block_cnt++, (const uint8_t *)&W[64]);
+    dump_sha1_block (impl_name, __LINE__, block_cnt++, (const uint8_t *)&W[64]);
 
     H[0] += a;
     H[1] += b;
